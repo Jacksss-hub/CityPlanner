@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Construction, Leaf, CircleDollarSign, PackageSearch, ArrowRight } from 'lucide-react';
 import { Logo } from '@/components/logo';
-import { ThemeToggle } from '@/components/theme-toggle';
 
 const bots = [
   {
@@ -37,7 +36,6 @@ export default function Home() {
     <main className="flex-1">
       <header className="p-4 md:px-6 flex items-center justify-between">
         <Logo />
-        <ThemeToggle />
       </header>
 
       <section className="relative h-[60vh] md:h-[70vh] flex items-center justify-center text-center text-white overflow-hidden">
