@@ -37,15 +37,25 @@ const prompt = ai.definePrompt({
   output: {schema: OptimizeCityPlanCostOutputSchema},
   prompt: `You are an expert city planner tasked with optimizing a city plan to fit within a budget.
 
-  Original Plan Costing:
-  {{originalPlanCosting}}
+Your task is to analyze the provided "Original Plan Costing" and bring the "Grand Total" under the "Budget Limit".
 
-  Budget Limit: ₹{{budgetLimit}}
+**Original Plan Costing**:
+{{{originalPlanCosting}}}
 
-  Identify expensive optional/luxury materials and suggest affordable alternatives or quantity reductions to bring the total cost within the budget. Explain the changes made to the original plan.
+**Budget Limit**: ₹{{{budgetLimit}}}
 
-  Provide the optimized plan costing details and a clear explanation of the changes. Ensure the optimized total is within the budget.
-  `,
+**Instructions**:
+1.  Identify expensive optional/luxury materials.
+2.  Suggest affordable alternatives or reduce quantities to lower the total cost.
+3.  Recalculate the cost table with the changes.
+4.  Ensure the new Grand Total is within the budget limit.
+5.  Provide a clear explanation of the changes you made.
+
+**Output Format**:
+Your entire output must conform to the JSON schema.
+-   \`optimizedPlanCosting\` should contain the full, recalculated cost table and summary, including Subtotal, Contingency, and the new Grand Total.
+-   \`explanation\` should describe the specific optimizations you performed.
+`,
 });
 
 const optimizeCityPlanCostFlow = ai.defineFlow(
