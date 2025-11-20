@@ -33,75 +33,79 @@ export default function Home() {
   const heroImage = PlaceHolderImages.find(p => p.id === 'city-skyline');
 
   return (
-    <main className="flex-1">
+    <div className="flex flex-col min-h-screen bg-background">
       <header className="p-4 md:px-6 flex items-center justify-between">
         <Logo />
       </header>
 
-      <section className="relative h-[60vh] md:h-[70vh] flex items-center justify-center text-center text-white overflow-hidden">
-        {heroImage && (
-            <Image
-              src={heroImage.imageUrl}
-              alt={heroImage.description}
-              fill
-              className="object-cover z-0"
-              priority
-              data-ai-hint={heroImage.imageHint}
-            />
-        )}
-        <div className="absolute inset-0 bg-black/50 z-10"></div>
-        <div className="container px-4 md:px-6 z-20 space-y-4 relative">
-          <h1 className="text-4xl md:text-6xl font-headline font-bold tracking-tighter">
-            Build the City of Tomorrow, Today.
-          </h1>
-          <p className="max-w-[700px] mx-auto text-lg md:text-xl text-primary-foreground/80">
-            Our AI-powered multi-agent crew collaborates to design sustainable, budget-friendly, and eco-conscious city layouts.
-          </p>
-          <div className="space-x-4">
-            <Button asChild size="lg" className="font-bold group">
-              <Link href="/build">
-                Start Building
-                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      <section id="about" className="w-full py-12 md:py-24 lg:py-32">
-        <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <div className="space-y-2">
-              <div className="inline-block rounded-lg bg-secondary px-3 py-1 text-sm font-medium">
-                Our AI Crew
-              </div>
-              <h2 className="text-3xl font-headline font-bold tracking-tighter sm:text-5xl">
-                Meet the Agents Behind the Plan
-              </h2>
-              <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Four specialized AI bots work in synergy, each handling a critical aspect of city planning to ensure a holistic and optimized design.
-              </p>
+      <main className="flex-1">
+        <section className="relative h-[60vh] md:h-[70vh] flex items-center justify-center text-center text-white overflow-hidden">
+          {heroImage && (
+              <Image
+                src={heroImage.imageUrl}
+                alt={heroImage.description}
+                fill
+                className="object-cover z-0"
+                priority
+                data-ai-hint={heroImage.imageHint}
+              />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent z-10"></div>
+          <div className="container px-4 md:px-6 z-20 space-y-4 relative">
+            <h1 className="text-4xl md:text-6xl font-headline font-bold tracking-tighter text-shadow-lg">
+              Build the City of Tomorrow, Today.
+            </h1>
+            <p className="max-w-[700px] mx-auto text-lg md:text-xl text-primary-foreground/90 text-shadow">
+              Our AI-powered multi-agent crew collaborates to design sustainable, budget-friendly, and eco-conscious city layouts.
+            </p>
+            <div className="space-x-4">
+              <Button asChild size="lg" className="font-bold group shadow-lg">
+                <Link href="/build">
+                  Start Building
+                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                </Link>
+              </Button>
             </div>
           </div>
-          <div className="mx-auto grid max-w-7xl items-start gap-8 py-12 sm:grid-cols-2 lg:grid-cols-4">
-            {bots.map((bot) => (
-              <Card key={bot.name} className="h-full transition-all duration-300 hover:bg-card/80 hover:scale-[1.02]">
-                <CardHeader className="flex flex-col items-center text-center gap-4">
-                  {bot.icon}
-                  <CardTitle className="font-headline text-2xl text-center">{bot.name}</CardTitle>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <p className="text-muted-foreground">{bot.description}</p>
-                </CardContent>
-              </Card>
-            ))}
+        </section>
+
+        <section id="about" className="w-full py-12 md:py-24 lg:py-32 bg-secondary/50">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <div className="inline-block rounded-lg bg-primary/10 text-primary px-3 py-1 text-sm font-semibold">
+                  Our AI Crew
+                </div>
+                <h2 className="text-3xl font-headline font-bold tracking-tighter sm:text-5xl">
+                  Meet the Agents Behind the Plan
+                </h2>
+                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  Four specialized AI bots work in synergy, each handling a critical aspect of city planning to ensure a holistic and optimized design.
+                </p>
+              </div>
+            </div>
+            <div className="mx-auto grid max-w-7xl items-start gap-8 py-12 sm:grid-cols-2 lg:grid-cols-4">
+              {bots.map((bot) => (
+                <Card key={bot.name} className="h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+                  <CardHeader className="flex flex-col items-center text-center gap-4">
+                    <div className="p-4 bg-primary/10 rounded-full">
+                      {bot.icon}
+                    </div>
+                    <CardTitle className="font-headline text-2xl text-center">{bot.name}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-center">
+                    <p className="text-muted-foreground">{bot.description}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
-      
-      <footer className="py-6 px-4 md:px-6 text-center text-muted-foreground">
-        <p>© {new Date().getFullYear()} City Planner Crew. All rights reserved.</p>
-      </footer>
-    </main>
+        </section>
+        
+        <footer className="py-6 px-4 md:px-6 text-center text-muted-foreground">
+          <p>© {new Date().getFullYear()} City Planner Crew. All rights reserved.</p>
+        </footer>
+      </main>
+    </div>
   );
 }
