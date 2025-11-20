@@ -35,26 +35,39 @@ const prompt = ai.definePrompt({
   name: 'optimizeCityPlanCostPrompt',
   input: {schema: OptimizeCityPlanCostInputSchema},
   output: {schema: OptimizeCityPlanCostOutputSchema},
-  prompt: `You are an expert city planner tasked with optimizing a city plan to fit within a budget.
+  prompt: `You are a cost optimization AI for city planning. Your task is to reduce the cost of a city plan to be under a specific budget.
 
-Your task is to analyze the provided "Original Plan Costing" and bring the "Grand Total" under the "Budget Limit".
+**Budget Limit**: ₹{{{budgetLimit}}}
 
 **Original Plan Costing**:
 {{{originalPlanCosting}}}
 
-**Budget Limit**: ₹{{{budgetLimit}}}
+---
 
-**Instructions**:
-1.  **Analyze**: Carefully review the material list and identify items that are expensive, optional, or luxury.
-2.  **Optimize**: To reduce the total cost, either suggest more affordable alternative materials or reduce the quantities of expensive items. Be specific (e.g., "Replaced Marble Flooring with Polished Concrete," "Reduced number of decorative statues by 50%").
-3.  **Recalculate**: Create a new, complete costing table named "Optimized Cost Estimate". This table MUST include columns for Material, Quantity, Unit Cost, and Total Cost for every single item, even those that were not changed.
-4.  **Summarize**: After the table, calculate a new Subtotal, a 10% contingency fee, and a new Grand Total.
-5.  **Explain**: Write a clear, concise explanation of the changes you made to achieve the budget target.
+**YOUR TASK - FOLLOW THESE STEPS EXACTLY:**
 
-**Output Format**:
-Your entire output must conform to the JSON schema.
--   The 'optimizedPlanCosting' field must contain the full, recalculated cost table and the new summary (Subtotal, Contingency, Grand Total).
--   The 'explanation' field must describe the specific optimizations you performed.
+**Step 1: Identify Expensive Items**
+Analyze the "Original Plan Costing" table. Find 2-3 of the most expensive materials or features that can be reduced or replaced.
+
+**Step 2: Create an "Optimized Cost Estimate" Table**
+- Create a new Markdown table named "Optimized Cost Estimate".
+- This table MUST include EVERY item from the original plan.
+- For the items you identified in Step 1, reduce their quantity or replace them with a cheaper alternative and calculate a new "Total Cost".
+- For all other items, copy them exactly as they were.
+- The table columns must be: | Material | Quantity | Unit Cost (INR) | Total Cost (INR) |
+
+**Step 3: Calculate the New Summary**
+- Below the new table, calculate the summary:
+  - **Subtotal**: The sum of all "Total Cost" values in your new table.
+  - **Contingency (10%)**: 10% of the new Subtotal.
+  - **Grand Total**: The new Subtotal + Contingency.
+- **Ensure the new Grand Total is LESS than the Budget Limit.**
+
+**Step 4: Write the Explanation**
+- Provide a brief, clear explanation of the exact changes you made to meet the budget. For example: "Reduced the amount of marble and replaced decorative statues with public gardens."
+
+**Step 5: Format the Output**
+- Combine the "Optimized Cost Estimate" table, the new summary, and the explanation into the final response fields. The \`optimizedPlanCosting\` field must contain the full table and summary. The \`explanation\` field must contain your summary of changes.
 `,
 });
 
