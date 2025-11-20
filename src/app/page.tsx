@@ -83,14 +83,14 @@ export default function Home() {
               </p>
             </div>
           </div>
-          <div className="mx-auto grid max-w-2xl items-start gap-6 py-12">
+          <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-8 py-12 sm:grid-cols-2 lg:grid-cols-4">
             {bots.map((bot) => (
               <Card key={bot.name} className="h-full transition-all duration-300 hover:bg-card/80 hover:scale-[1.02]">
-                <CardHeader className="flex flex-row items-center gap-4">
+                <CardHeader className="flex flex-col items-center text-center gap-4">
                   {bot.icon}
                   <CardTitle className="font-headline text-2xl">{bot.name}</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="text-center">
                   <p className="text-muted-foreground">{bot.description}</p>
                 </CardContent>
               </Card>
