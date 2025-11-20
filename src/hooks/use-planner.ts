@@ -23,7 +23,6 @@ interface PlannerState {
   rawMaterials?: string;
   originalCosting?: string;
   initialBlueprint?: string;
-semicolon
   grandTotal: number;
   isOverBudget: boolean;
   optimizedCosting?: string;
@@ -90,7 +89,7 @@ export function usePlanner(cityDescription: string) {
       currentStep = 'environment';
       setState(s => ({ ...s, status: currentStep }));
       const envReport = await getEnvironmentalReport({
-        cityPlanDescription,
+        cityPlanDescription: cityDescription,
         originalCosting,
         optimizedCosting: state.isOverBudget ? finalCosting : undefined,
       });
