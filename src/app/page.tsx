@@ -83,7 +83,7 @@ export default function Home() {
               </p>
             </div>
           </div>
-          <div className="mx-auto grid max-w-5xl items-start gap-6 py-12 lg:grid-cols-2 lg:gap-12">
+          <div className="mx-auto grid max-w-2xl items-start gap-6 py-12">
             {bots.map((bot) => (
               <Card key={bot.name} className="h-full transition-all duration-300 hover:bg-card/80 hover:scale-[1.02]">
                 <CardHeader className="flex flex-row items-center gap-4">
