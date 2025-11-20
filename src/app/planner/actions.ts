@@ -5,41 +5,30 @@ import { assessEnvironmentalImpact, type AssessEnvironmentalImpactInput } from '
 
 export async function getInitialPlan(cityDescription: string) {
   const prompt = `
-    As a Raw Material Supplier Bot and a Finance Manager Bot, analyze the following city plan description. Your task is to perform two main functions:
+    Analyze the following city plan description to produce a raw material list, a cost estimate, and an ASCII art blueprint.
 
-    1.  **Raw Material Supply**:
-        *   Identify all infrastructure components (e.g., buildings, roads, parks).
-        *   List every necessary raw material.
-        *   Provide estimated quantities.
-        *   Categorize each material as 'Essential' or 'Optional/Luxury'.
-        *   State the purpose of each material.
+    **Function 1: Raw Material Supply**
+    - Identify infrastructure (buildings, roads, parks).
+    - List all raw materials with estimated quantities.
+    - Categorize materials as 'Essential' or 'Optional/Luxury'.
+    - State each material's purpose.
 
-    2.  **Initial Financial Analysis**:
-        *   Assign realistic per-unit costs in Indian Rupees (₹) to each material.
-        *   Create a costing table with columns: Material, Quantity, Unit Cost, and Total Cost.
-        *   Calculate the Subtotal of all materials.
-        *   Add a 10% contingency fee.
-        *   Calculate the Grand Total.
-        *   Indicate the budget status: "Within Budget" or "Exceeds ₹10,00,000 Budget".
-
-    Additionally, generate an initial ASCII art blueprint of the city layout.
+    **Function 2: Initial Financial Analysis**
+    - Assign realistic per-unit costs in Indian Rupees (₹).
+    - Create a costing table (Material, Quantity, Unit Cost, Total Cost).
+    - Calculate Subtotal, a 10% contingency fee, and Grand Total.
+    - State if the budget exceeds ₹10,00,000.
 
     **Output Format**:
-    Your entire output must be a single Markdown string. Use the following structure with headings:
-
+    Use this exact Markdown structure:
     ## Raw Materials
-
-    [Your structured list of materials here]
-
+    [Material list]
     ## Cost Estimate
-
-    [Your cost table and summary here]
-
+    [Cost table and summary]
     ## Initial Blueprint
+    [ASCII art blueprint]
 
-    [Your ASCII art blueprint here]
-
-    **City Description to Analyze**:
+    **City Description**:
     ${cityDescription}
   `;
   try {
