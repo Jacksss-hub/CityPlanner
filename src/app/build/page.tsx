@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
-import Link from 'next/link'
 import { useRouter } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
@@ -28,6 +27,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Logo } from "@/components/logo"
 import { ArrowRight, Bot } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 const features = [
   { id: "stadium", label: "Stadium" },
@@ -80,6 +80,7 @@ export default function BuildPage() {
     <div className="flex flex-col min-h-screen">
       <header className="p-4 md:px-6 flex items-center justify-between">
         <Logo />
+        <ThemeToggle />
       </header>
       <main className="flex-1 flex items-center justify-center p-4">
         <Card className="w-full max-w-2xl">
@@ -110,7 +111,7 @@ export default function BuildPage() {
                       </FormControl>
                       <FormDescription>
                         Describe the layout, key districts, and overall feel of the city you want to build.
-                      </FormDescription>ieg
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}

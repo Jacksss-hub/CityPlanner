@@ -3,17 +3,12 @@
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-import { getInitialPlan, getOptimizedPlan, getEnvironmentalReport, getFinalBlueprint } from "@/app/planner/actions";
-import { parseInitialPlan, parseGrandTotal, parseFinalBlueprint } from "@/lib/parsers";
-import type { AssessEnvironmentalImpactOutput } from "@/ai/flows/assess-environmental-impact";
+import { getInitialPlan, getOptimizedPlan } from "@/app/planner/actions";
+import { parseInitialPlan, parseGrandTotal } from "@/lib/parsers";
 
 type PlannerStatus =
   | 'initial'
-  | 'materials'
-  | 'costing'
-  | 'optimizing'
-  | 'environment'
-  | 'blueprint'
+  | 'loading'
   | 'done'
   | 'error';
 
@@ -27,11 +22,8 @@ interface PlannerState {
   isOverBudget: boolean;
   optimizedCosting?: string;
   optimizationExplanation?: string;
-  envAnalysis?: AssessEnvironmentalImpactOutput;
-  finalBlueprint?: string;
-  finalBlueprintComparison?: string;
   error?: {
-    step: PlannerStatus;
+    step: 'initial' | 'optimization';
     message: string;
   };
 }
@@ -47,93 +39,89 @@ export function usePlanner(cityDescription: string) {
   const router = useRouter();
   const { toast } = useToast();
 
-  const runPlanner = useCallback(async () => {
-    let currentStep: PlannerStatus = 'initial';
+  const runInitialPlanner = useCallback(async () => {
+    setState(s => ({ ...s, status: 'loading' }));
+    toast({
+        title: "Generating Initial Plan...",
+        description: "Our AI crew is building your city blueprint.",
+    });
+
     try {
-      // Step 1 & 2: Get Initial Plan (Materials + Costing)
-      currentStep = 'materials';
-      setState(s => ({ ...s, status: currentStep }));
       const initialPlanResponse = await getInitialPlan(cityDescription);
       const { rawMaterials, originalCosting, initialBlueprint } = parseInitialPlan(initialPlanResponse);
       const grandTotal = parseGrandTotal(originalCosting);
       
-      currentStep = 'costing';
       setState(s => ({
         ...s,
-        status: currentStep,
+        status: 'done',
         rawMaterials,
         originalCosting,
         initialBlueprint,
-        finalBlueprint: initialBlueprint, // Set initial as final for now
         grandTotal,
+        isOverBudget: grandTotal > 1000000,
       }));
 
-      let finalCosting = originalCosting;
-      let finalExplanation = "The plan is within the budget.";
-
-      // Step 3: Optimize if over budget
-      if (grandTotal > 1000000) {
-        currentStep = 'optimizing';
-        setState(s => ({ ...s, status: currentStep, isOverBudget: true }));
-        const optimizedPlan = await getOptimizedPlan(originalCosting);
-        finalCosting = optimizedPlan.optimizedPlanCosting;
-        finalExplanation = optimizedPlan.explanation;
-        setState(s => ({
-          ...s,
-          optimizedCosting: optimizedPlan.optimizedPlanCosting,
-          optimizationExplanation: optimizedPlan.explanation,
-        }));
-      }
-
-      // Step 4: Environmental Analysis
-      currentStep = 'environment';
-      setState(s => ({ ...s, status: currentStep }));
-      const envReport = await getEnvironmentalReport({
-        cityPlanDescription: cityDescription,
-        originalCosting,
-        optimizedCosting: state.isOverBudget ? finalCosting : undefined,
-      });
-      setState(s => ({ ...s, envAnalysis: envReport }));
-
-      // Step 5: Final Blueprint
-      currentStep = 'blueprint';
-      setState(s => ({ ...s, status: currentStep }));
-      if (state.isOverBudget) {
-        const finalBlueprintResponse = await getFinalBlueprint(cityDescription, finalExplanation);
-        const { finalBlueprint, planComparison } = parseFinalBlueprint(finalBlueprintResponse);
-        setState(s => ({
-            ...s,
-            finalBlueprint,
-            finalBlueprintComparison: planComparison
-        }));
-      }
-
-      currentStep = 'done';
-      setState(s => ({ ...s, status: currentStep }));
       toast({
-        title: "City Plan Complete!",
-        description: "Your city has been designed by our AI crew.",
+        title: "Initial Plan Generated!",
+        description: "Review the materials, costs, and layout.",
       });
 
     } catch (e) {
       const err = e as Error;
-      console.error(`Error during step ${currentStep}:`, err);
+      console.error(`Error during initial plan generation:`, err);
       setState(s => ({
         ...s,
         status: 'error',
-        error: { step: currentStep, message: err.message },
+        error: { step: 'initial', message: err.message },
       }));
       toast({
         variant: "destructive",
         title: "An Error Occurred",
-        description: err.message || `Something went wrong during the '${currentStep}' step.`,
+        description: err.message || `Something went wrong during initial planning.`,
       });
     }
-  }, [cityDescription, state.isOverBudget, toast]);
+  }, [cityDescription, toast]);
   
+  const runOptimization = useCallback(async () => {
+    if (!state.originalCosting) return;
+
+    setState(s => ({ ...s, status: 'loading' }));
+    toast({
+        title: "Optimizing Plan...",
+        description: "Our AI Finance Manager is working on the budget.",
+    });
+
+    try {
+        const optimizedPlan = await getOptimizedPlan(state.originalCosting);
+        setState(s => ({
+            ...s,
+            status: 'done',
+            optimizedCosting: optimizedPlan.optimizedPlanCosting,
+            optimizationExplanation: optimizedPlan.explanation,
+        }));
+        toast({
+            title: "Plan Optimized!",
+            description: "The city plan has been updated to fit the budget.",
+        });
+    } catch(e) {
+        const err = e as Error;
+        console.error(`Error during optimization:`, err);
+        setState(s => ({
+          ...s,
+          status: 'error',
+          error: { step: 'optimization', message: err.message },
+        }));
+        toast({
+          variant: "destructive",
+          title: "Optimization Failed",
+          description: err.message || `Something went wrong during budget optimization.`,
+        });
+    }
+  }, [state.originalCosting, toast]);
+
   const reset = () => {
     router.push('/build');
   };
 
-  return { state, runPlanner, reset };
+  return { state, runInitialPlanner, runOptimization, reset };
 }

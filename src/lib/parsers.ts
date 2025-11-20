@@ -30,17 +30,3 @@ export function parseGrandTotal(costingText: string): number {
 
   return parseFloat(numberMatch[0].replace(/,/g, ''));
 }
-
-
-export function parseFinalBlueprint(markdown: string): {
-  finalBlueprint: string;
-  planComparison: string;
-} {
-  const blueprintMatch = markdown.match(/## Final Blueprint([\s\S]*?)## Plan Comparison/);
-  const comparisonMatch = markdown.match(/## Plan Comparison([\s\S]*)/);
-
-  return {
-    finalBlueprint: blueprintMatch ? blueprintMatch[1].trim() : "Could not parse final blueprint.",
-    planComparison: comparisonMatch ? comparisonMatch[1].trim() : "Could not parse plan comparison.",
-  };
-}
