@@ -54,25 +54,24 @@ const prompt = ai.definePrompt({
   name: 'assessEnvironmentalImpactPrompt',
   input: {schema: AssessEnvironmentalImpactInputSchema},
   output: {schema: AssessEnvironmentalImpactOutputSchema},
-  prompt: `You are an expert environmental analyst.
+  prompt: `As an environmental analyst, evaluate the city plan based on its description and costing.
 
-You will evaluate the environmental impact of a city plan based on its description, original costing, and optimized costing (if available).
+**Task**:
+1.  **Analyze Original Plan**:
+    -   Identify environmental risks.
+    -   Suggest eco-friendly alternatives.
+    -   Provide a Green Score (0-100).
+2.  **Analyze Optimized Plan (if provided)**:
+    -   Do the same analysis as the original plan.
+3.  **Final Recommendation**:
+    -   Recommend the best path forward (Original, Optimized, or Hybrid).
 
-For each plan (original and optimized), identify environmental risks, provide a Green Score (0-100), and suggest eco-friendly alternatives.
+**City Plan**: {{{cityPlanDescription}}}
+**Original Cost**: {{{originalCosting}}}
+**Optimized Cost**: {{{optimizedCosting}}}
 
-Finally, recommend which plan is better overall: Original, Optimized, or a Hybrid approach.
-
-City Plan Description: {{{cityPlanDescription}}}
-Original Costing: {{{originalCosting}}}
-Optimized Costing: {{{optimizedCosting}}}
-
-Output Format:
-For each plan:
-Environmental Risks: [List environmental risks]
-Green Score: [0-100]
-Greener Alternatives: [List eco-friendly alternatives]
-
-Final Recommendation: [Original / Optimized / Hybrid]`,
+Provide a structured analysis based on the inputs.
+`,
 });
 
 const assessEnvironmentalImpactFlow = ai.defineFlow(
